@@ -1,0 +1,14 @@
+%{
+#include<stdio.h>
+%}
+%%
+[0-9]   {printf("Input '%s' is a Digit.\n", yytext);}
+.|\n    {printf("Input '%s' is not a Digit.\n", yytext);}
+%%
+int main(){
+yylex();
+return 0;
+}
+int yywrap(){
+return 1;
+}
