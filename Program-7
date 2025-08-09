@@ -1,0 +1,38 @@
+%{
+#include <stdio.h>
+#include <string.h>
+
+char words[100][50];
+int wordCount = 0;
+
+char numbers[100][50];
+int numberCount = 0;
+%}
+
+%%
+[0-9]+                 { strcpy(numbers[numberCount++], yytext); }
+[a-zA-Z]+              { strcpy(words[wordCount++], yytext); }
+[ \t\n]+               { /* Ignore whitespace */ }
+.                      { /* Ignore punctuation/symbols */ }
+%%
+
+int main() {
+    printf("Enter a statement (like the flashcard shown to Pooja):\n");
+    yylex();
+
+    printf("\nWords List:\n");
+    for(int i = 0; i < wordCount; i++) {
+        printf("%s\n", words[i]);
+    }
+
+    printf("\nNumbers List:\n");
+    for(int i = 0; i < numberCount; i++) {
+        printf("%s\n", numbers[i]);
+    }
+
+    return 0;
+}
+
+int yywrap() {
+    return 1;
+}
