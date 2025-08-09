@@ -1,0 +1,21 @@
+%{
+#include <stdio.h>
+%}
+
+%%
+"+"     { printf("Operator: Addition (+)\n"); }
+"-"     { printf("Operator: Subtraction (-)\n"); }
+"*"     { printf("Operator: Multiplication (*)\n"); }
+"/"     { printf("Operator: Division (/)\n"); }
+.|\n    { /* Ignore other characters */ }
+%%
+
+int main() {
+    printf("Enter operators (Ctrl+D to stop input):\n");
+    yylex();
+    return 0;
+}
+
+int yywrap() {
+    return 1;
+}
