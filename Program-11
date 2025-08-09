@@ -1,0 +1,48 @@
+%{
+#include <stdio.h>
+int char_count = 0;
+int word_count = 0;
+int line_count = 0;
+%}
+
+%%
+[ \t]+              ; // Ignore spaces and tabs (but do not count them)
+\n                  { line_count++; } // Count lines
+
+"//".*              ; // Ignore single-line comments
+"/*"([^*]|\*+[^*/])*\*+\/    ; // Ignore multi-line comments
+
+[A-Za-z_][A-Za-z0-9_]*    { word_count++; char_count += yyleng; } // Identifiers/keywords
+[0-9]+                   { word_count++; char_count += yyleng; } // Numbers
+\"(\\.|[^"\\])*\"        { word_count++; char_count += yyleng; } // String literals
+
+.                       { char_count++; } // All other characters
+
+%%
+
+int main(int argc, char **argv) {
+    if (argc != 2) {
+        printf("Usage: %s <source_file.c>\n", argv[0]);
+        return 1;
+    }
+
+    FILE *fp = fopen(argv[1], "r");
+    if (!fp) {
+        perror("File opening failed");
+        return 1;
+    }
+
+    yyin = fp;
+    yylex();
+
+    fclose(fp);
+
+    printf("\n--- Statistics ---\n");
+    printf("Lines: %d\n", line_count);
+    printf("Words: %d\n", word_count);
+    printf("Characters: %d\n", char_count);
+    return 0;
+}
+int yywrap(){
+return 1;
+}
