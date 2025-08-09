@@ -1,0 +1,25 @@
+%{
+#include <stdio.h>
+
+int space_count = 0;
+int newline_count = 0;
+%}
+
+%%
+" "     { space_count++; }
+"\t"    { space_count++; }      // Count tab as whitespace
+"\n"    { newline_count++; }
+.       { /* Ignore other characters */ }
+%%
+
+int main() {
+    printf("Enter text (Press Ctrl+D to stop):\n");
+    yylex();
+    printf("\nTotal Whitespaces: %d\n", space_count);
+    printf("Total Newline Characters: %d\n", newline_count);
+    return 0;
+}
+
+int yywrap() {
+    return 1;
+}
